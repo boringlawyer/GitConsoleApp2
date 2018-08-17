@@ -1,14 +1,16 @@
 #include "stdafx.h"
 #include "TacObject.h"
+#ifndef _USE_MATH_DEFINES
+#define _USE_MATH_DEFINES
+#endif // !_USE_MATH_DEFINES
 
+#include <math.h>
 Font TacObject::font;
 TacObject::TacObject()
 {
 	sprite = CircleShape(50);
 	sprite.setFillColor(Color(255, 0, 0));
 	hasParent = false;
-	//line = nullptr;
-	//SetUpLines();
 }
 
 TacObject::TacObject(string nm, float xParam, float yParam)
@@ -21,7 +23,7 @@ TacObject::TacObject(string nm, float xParam, float yParam)
 	name = nm;
 	if (font.getInfo().family == "")
 	{
-		TacObject::font.loadFromFile("C:\\Users\\Caleb\\source\\repos\\GitConsoleApp\\Debug\\Montserrat-Black.ttf");
+		TacObject::font.loadFromFile("C:\\Users\\Caleb\\Documents\\Github\\GitConsoleApp2\\Debug\\Montserrat-Regular.ttf");
 	}
 	text.setFont(TacObject::font);
 	text.setString(name);
@@ -36,25 +38,6 @@ TacObject::TacObject(string nm, float xParam, float yParam)
 
 TacObject::TacObject(vector<TacObject*> pnt, string nm, float xParam, float yParam) : TacObject(nm, xParam, yParam)
 {
-	/*x = xParam;
-	y = yParam;
-	sprite = CircleShape(50);
-	sprite.setPosition(x, y);
-	sprite.setFillColor(Color(255, 0, 0));
-	name = nm;
-	if (font.getInfo().family == "")
-	{
-		TacObject::font.loadFromFile("C:\\Users\\Caleb\\source\\repos\\GitConsoleApp\\Debug\\Montserrat-Black.ttf");
-	}
-	text.setFont(TacObject::font);
-	text.setString(name);
-	text.setCharacterSize(24);
-	text.setFillColor(sf::Color::Black);
-	// places text
-	text.setPosition(x, y);
-	text.move(-(text.getLocalBounds().width) / 3, sprite.getLocalBounds().height / 2 + text.getLocalBounds().height);
-	parents = pnt;
-	hasParent = true;*/
 	parents = pnt;
 	SetUpLines();
 }
@@ -69,8 +52,7 @@ TacObject::TacObject(const TacObject& cpy)
 {
 	this->name = cpy.name;
 	this->sprite = cpy.sprite;
-	//this->font = new Font(*(cpy.font));
-	this->text = cpy.text;//this->text = new Text(*(cpy.text));
+	this->text = cpy.text;
 	this->x = cpy.x;
 	this->y = cpy.y;
 	if (hasParent)
@@ -83,9 +65,8 @@ TacObject::TacObject(const TacObject& cpy)
 	{
 		this->hasParent = false;
 	}
-	//this->line = cpy.line;
 }
-
+// draw all of the lines
 void TacObject::DrawLines(RenderTarget &target)
 {
 	for (RectangleShape line : lines)
@@ -97,22 +78,14 @@ void TacObject::DrawLines(RenderTarget &target)
 void TacObject::draw(RenderTarget &target, RenderStates states) const
 {
 	target.draw(sprite);
-	//if (hasParent)
-	//{
-	//}
 	target.draw(text);
-	//target.draw(line);
 
 }
 
 Vector2f TacObject::GetCenterOfSprite()
 {
-	//float x = (sprite.getGlobalBounds().left + sprite.getGlobalBounds().width) / 2;
-	//float y = (sprite.getGlobalBounds().top + sprite.getGlobalBounds().height) / 2;
-	//float x = (sprite.getPosition().x + sprite.getGlobalBounds().width);
-	//float y = (sprite.getPosition().y + sprite.getGlobalBounds().height);
-	float centerX = (x + sprite.getGlobalBounds().width / 2);
-	float centerY = (y + sprite.getGlobalBounds().height / 2);
+	float centerX = (sprite.getPosition().x + (sprite.getGlobalBounds().width) / 2);
+	float centerY = (sprite.getPosition().y + (sprite.getGlobalBounds().height) / 2);
 	return Vector2f(centerX, centerY);
 }
 
@@ -154,12 +127,9 @@ void TacObject::PlaceChildren()
 	for (int i = 0; i < numChildren; i++, placeX += 300)
 	{
 		this->children[i]->Move(placeX, 0);
-		this->children[i]->SetUpLines();
+		//this->children[i]->SetUpLines();
 	}
-	this->SetUpLines();
-	for (int i = 0; i < numChildren; i++)
-	{
-	}
+	//this->SetUpLines();
 }
 
 void TacObject::AverageLocations(vector<TacObject*> objects)
@@ -184,6 +154,7 @@ void TacObject::SetUpLines()
 			float yDistance = this->GetCenterOfSprite().y - parent->GetCenterOfSprite().y;
 			float distance = sqrt(pow(xDistance, 2) + pow(yDistance, 2));
 			RectangleShape line = RectangleShape(Vector2f(5, distance));
+			line.setOrigin(2.5, 0);
 			line.setPosition(this->GetCenterOfSprite());
 			float angle;
 			if (xDistance == 0)
@@ -192,7 +163,15 @@ void TacObject::SetUpLines()
 			}
 			else
 			{
-				angle = tan(yDistance / xDistance);
+				angle = atan(yDistance / xDistance) * (-180 / M_PI);
+				if (this->GetCenterOfSprite().x < parent->GetCenterOfSprite().x)
+				{
+					angle += 45;
+				}
+				else
+				{
+					angle += 315;
+				}
 			}
 			line.setRotation(angle);
 			line.setFillColor(Color::Black);

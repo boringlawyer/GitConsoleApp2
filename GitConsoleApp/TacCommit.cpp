@@ -9,20 +9,12 @@ TacCommit::TacCommit()
 TacCommit::TacCommit(git_commit* commitParam, string nm, float xParam, float yParam) : TacObject(nm, xParam, yParam)
 {
 	commit = commitParam;
-	/*name = nm;
-	x = xParam;
-	y = yParam;
-	*/
 	this;
 }
 
 TacCommit::TacCommit(git_commit * commitParam, TacObject * pnt, string nm, float xParam, float yParam) : TacObject(pnt, nm, xParam, yParam)
 {
 	commit = commitParam;
-	/*parent = pnt;
-	name = nm;
-	x = xParam;
-	y = yParam;*/
 }
 
 TacCommit::TacCommit(const TacCommit &cpy) : TacObject(cpy)
@@ -83,30 +75,6 @@ void TacCommit::AddChild(TacCommit * newChild)
 	children.push_back(newChild);
 }
 
-/*Vector2f TacCommit::GetCenterOfSprite()
-{
-	float centerX = (x + sprite.getGlobalBounds().width / 2);
-	float centerY = (y + sprite.getGlobalBounds().height / 2);
-	return Vector2f(centerX, centerY);
-}*/
-
-/*TacObject * TacCommit::GetParent()
-{
-	return parent;
-}*/
-
-/*void TacCommit::SetParent(TacObject * newParent)
-{
-	if (newParent != nullptr && newParent != (TacObject*)0xcdcdcdcd)
-	{
-		this->parent = newParent;
-		hasParent = true;
-		SetUpLines();
-	}
-}*/
-
-
 TacCommit::~TacCommit()
 {
 }
-
