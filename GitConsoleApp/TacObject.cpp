@@ -3,7 +3,6 @@
 #ifndef _USE_MATH_DEFINES
 #define _USE_MATH_DEFINES
 #endif // !_USE_MATH_DEFINES
-
 #include <math.h>
 Font TacObject::font;
 TacObject::TacObject()
@@ -66,7 +65,7 @@ TacObject::TacObject(const TacObject& cpy)
 		this->hasParent = false;
 	}
 }
-// draw all of the lines
+// draw all of the lines. Because SFML does not support layering, this must be done before the regular draw()
 void TacObject::DrawLines(RenderTarget &target)
 {
 	for (RectangleShape line : lines)
@@ -75,6 +74,7 @@ void TacObject::DrawLines(RenderTarget &target)
 	}
 }
 
+// draws everything except the lines
 void TacObject::draw(RenderTarget &target, RenderStates states) const
 {
 	target.draw(sprite);
@@ -82,6 +82,7 @@ void TacObject::draw(RenderTarget &target, RenderStates states) const
 
 }
 
+// gets the center of the circle sprite, as opposed to the origin (upper left corner)
 Vector2f TacObject::GetCenterOfSprite()
 {
 	float centerX = (sprite.getPosition().x + (sprite.getGlobalBounds().width) / 2);
@@ -93,11 +94,13 @@ TacObject::~TacObject()
 {
 }
 
+// returns the parent vector
 vector<TacObject*> TacObject::GetParents()
 {
 	return parents;
 }
 
+// adds a parent to the parents vector
 void TacObject::AddParent(TacObject * newParent)
 {
 	if (newParent != nullptr && newParent != (TacObject*)0xcdcdcdcd)
@@ -108,6 +111,7 @@ void TacObject::AddParent(TacObject * newParent)
 	}
 }
 
+// adds a child to the children vector
 void TacObject::AddChild(TacObject * newChild)
 {
 	if (newChild != nullptr)
@@ -116,6 +120,7 @@ void TacObject::AddChild(TacObject * newChild)
 	}
 }
 
+// in the event of multiple children, place the children equidistant apart, centered above the parent
 void TacObject::PlaceChildren()
 {
 	int numChildren = this->children.size();
@@ -127,22 +132,10 @@ void TacObject::PlaceChildren()
 	for (int i = 0; i < numChildren; i++, placeX += 300)
 	{
 		this->children[i]->Move(placeX, 0);
-		//this->children[i]->SetUpLines();
 	}
-	//this->SetUpLines();
 }
 
-void TacObject::AverageLocations(vector<TacObject*> objects)
-{
-	Vector2f result(0, 0);
-	for (int i = 0; i < objects.size(); i++)
-	{
-		result += objects[i]->GetCenterOfSprite();
-	}
-	result.x /= objects.size();
-	result.y /= objects.size();
-}
-
+// create the lines that connect the TacObjects together.
 void TacObject::SetUpLines()
 {
 	lines.clear();
@@ -150,6 +143,7 @@ void TacObject::SetUpLines()
 	{
 		for (TacObject* parent : parents)
 		{
+			// initialize the line and set its origin
 			float xDistance = this->GetCenterOfSprite().x - parent->GetCenterOfSprite().x;
 			float yDistance = this->GetCenterOfSprite().y - parent->GetCenterOfSprite().y;
 			float distance = sqrt(pow(xDistance, 2) + pow(yDistance, 2));
@@ -163,15 +157,8 @@ void TacObject::SetUpLines()
 			}
 			else
 			{
-				angle = atan(yDistance / xDistance) * (-180 / M_PI);
-				if (this->GetCenterOfSprite().x < parent->GetCenterOfSprite().x)
-				{
-					angle += 45;
-				}
-				else
-				{
-					angle += 315;
-				}
+				// xDistance and yDistance are switched because the x axis is opposite the angle and the y axis is adjacent
+				angle = atan(xDistance / yDistance) * (-180 / M_PI);
 			}
 			line.setRotation(angle);
 			line.setFillColor(Color::Black);
@@ -179,7 +166,7 @@ void TacObject::SetUpLines()
 		}
 	}
 }
-
+// translates the TacObject
 void TacObject::Move(int deltaX, int deltaY)
 {
 	this->sprite.move(deltaX, deltaY);
@@ -193,7 +180,7 @@ void TacObject::Move(int deltaX, int deltaY)
 	}
 
 }
-
+// sets the position of the TacObject
 void TacObject::MoveTo(int newX, int newY)
 {
 	this->sprite.setPosition(newX, newY);

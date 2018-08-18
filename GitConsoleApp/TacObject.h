@@ -30,7 +30,6 @@ protected:
 	CircleShape sprite;
 	//RectangleShape line;
 	vector<RectangleShape> lines;
-	virtual void AverageLocations(vector<TacObject*> objects);
 	virtual void SetUpLines();
 	virtual void Move(int deltaX, int deltaY);
 	virtual void MoveTo(int newX, int newY);
