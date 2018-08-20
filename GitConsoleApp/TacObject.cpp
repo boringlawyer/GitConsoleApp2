@@ -116,7 +116,7 @@ void TacObject::AddChild(TacObject * newChild)
 {
 	if (newChild != nullptr)
 	{
-		children.push_back(newChild);
+		this->children.push_back(newChild);
 	}
 }
 
