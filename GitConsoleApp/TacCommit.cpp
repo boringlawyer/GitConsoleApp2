@@ -9,7 +9,6 @@ TacCommit::TacCommit()
 TacCommit::TacCommit(git_commit* commitParam, string nm, float xParam, float yParam) : TacObject(nm, xParam, yParam)
 {
 	commit = commitParam;
-	this;
 }
 
 TacCommit::TacCommit(git_commit * commitParam, TacObject * pnt, string nm, float xParam, float yParam) : TacObject(pnt, nm, xParam, yParam)

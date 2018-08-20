@@ -124,14 +124,23 @@ void TacObject::AddChild(TacObject * newChild)
 void TacObject::PlaceChildren()
 {
 	int numChildren = this->children.size();
-	if (numChildren  <= 1)
-	{
-		return;
-	}
 	int placeX = -((numChildren - 1) * 300) / 2;
 	for (int i = 0; i < numChildren; i++, placeX += 300)
 	{
 		this->children[i]->Move(placeX, 0);
+	}
+	// do not move if the child has already been placed
+	if (hasParent)
+	{
+		Move(0, -300);
+	}
+}
+
+void TacObject::FixChildrenWithMultipleParents()
+{
+	if (parents.size() > 1)
+	{
+		Move(0, 300 * parents.size());
 	}
 }
 

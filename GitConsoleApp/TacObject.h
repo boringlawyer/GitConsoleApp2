@@ -22,6 +22,7 @@ public:
 	virtual void AddParent(TacObject* newParent);
 	virtual void AddChild(TacObject* newChild);
 	virtual void PlaceChildren();
+	virtual void FixChildrenWithMultipleParents();
 protected:
 	vector<TacObject*> parents;
 	vector<TacObject*> children;
