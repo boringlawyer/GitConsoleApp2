@@ -32,6 +32,7 @@ TacObject::TacObject(string nm, float xParam, float yParam)
 	text.setPosition(x, y);
 	text.move(-(text.getLocalBounds().width) / 3, sprite.getLocalBounds().height / 2 + text.getLocalBounds().height);
 	hasParent = false;
+	lineOffset = Vector2f(0, 75);
 	//SetUpLines();
 }
 
@@ -153,12 +154,14 @@ void TacObject::SetUpLines()
 		for (TacObject* parent : parents)
 		{
 			// initialize the line and set its origin
-			float xDistance = this->GetCenterOfSprite().x - parent->GetCenterOfSprite().x;
-			float yDistance = this->GetCenterOfSprite().y - parent->GetCenterOfSprite().y;
+			float xDistance = (this->GetCenterOfSprite().x - parent->GetCenterOfSprite().x);
+			//float yDistance = this->GetCenterOfSprite().y - parent->GetCenterOfSprite().y;
+			float yDistance = this->GetCenterOfSprite().y - parent->GetCenterOfSprite().y + lineOffset.y;
 			float distance = sqrt(pow(xDistance, 2) + pow(yDistance, 2));
 			RectangleShape line = RectangleShape(Vector2f(5, distance));
 			line.setOrigin(2.5, 0);
-			line.setPosition(this->GetCenterOfSprite());
+			//line.setPosition(this->GetCenterOfSprite());
+			line.setPosition(this->GetCenterOfSprite() + lineOffset);
 			float angle;
 			if (xDistance == 0)
 			{
@@ -167,7 +170,8 @@ void TacObject::SetUpLines()
 			else
 			{
 				// xDistance and yDistance are switched because the x axis is opposite the angle and the y axis is adjacent
-				angle = atan(xDistance / yDistance) * (-180 / M_PI);
+				angle = atan(xDistance / -yDistance) * (180 / M_PI);
+				//angle = 45;
 			}
 			line.setRotation(angle);
 			line.setFillColor(Color::Black);

@@ -38,4 +38,6 @@ protected:
 	Text text;
 	float x;
 	float y;
+	Vector2f lineAnchor;
+	Vector2f lineOffset;
 };
