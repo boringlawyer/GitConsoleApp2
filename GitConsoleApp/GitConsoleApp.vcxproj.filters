@@ -30,6 +30,9 @@
     <ClInclude Include="tac.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="TacBranch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -42,6 +45,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="TacCommit.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TacBranch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

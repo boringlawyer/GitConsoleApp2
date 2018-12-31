@@ -22,7 +22,7 @@ TacObject::TacObject(string nm, float xParam, float yParam)
 	name = nm;
 	if (font.getInfo().family == "")
 	{
-		TacObject::font.loadFromFile("C:\\Users\\Caleb\\Documents\\Github\\GitConsoleApp2\\Debug\\Montserrat-Regular.ttf");
+		TacObject::font.loadFromFile("C:\\Users\\Caleb\\Documents\\Github\\GitConsoleApp2\\Debug\\Montserrat-Black.ttf");
 	}
 	text.setFont(TacObject::font);
 	text.setString(name);
@@ -199,5 +199,6 @@ void TacObject::MoveTo(int newX, int newY)
 	this->sprite.setPosition(newX, newY);
 	this->x = newX;
 	this->y = newY;
+	this->text.setPosition(newX, newY);
 	this->SetUpLines();
 }
