@@ -125,10 +125,21 @@ void TacObject::AddChild(TacObject * newChild)
 void TacObject::PlaceChildren()
 {
 	int numChildren = this->children.size();
-	int placeX = -((numChildren - 1) * 300) / 2;
+	//int placeX = -((numChildren - 1) * 300) / 2;
+	int placeX = 0;
 	for (int i = 0; i < numChildren; i++, placeX += 300)
 	{
 		this->children[i]->Move(placeX, 0);
+		if (i > 0)
+		{
+			// if the text overlaps, move it again
+			if (this->children[i]->text.getGlobalBounds().intersects(this->children[i - 1]->text.getGlobalBounds()))
+			{
+				float xDiff = this->children[i - 1]->text.getGlobalBounds().left + this->children[i - 1]->text.getGlobalBounds().width;
+				xDiff -= this->children[i]->text.getGlobalBounds().left;
+				this->children[i]->Move(xDiff + 50, 0);
+			}
+		}
 	}
 	// do not move if the child has already been placed
 	if (hasParent)
@@ -155,7 +166,6 @@ void TacObject::SetUpLines()
 		{
 			// initialize the line and set its origin
 			float xDistance = (this->GetCenterOfSprite().x - parent->GetCenterOfSprite().x);
-			//float yDistance = this->GetCenterOfSprite().y - parent->GetCenterOfSprite().y;
 			float yDistance = this->GetCenterOfSprite().y - parent->GetCenterOfSprite().y + lineOffset.y;
 			float distance = sqrt(pow(xDistance, 2) + pow(yDistance, 2));
 			RectangleShape line = RectangleShape(Vector2f(5, distance));
@@ -180,18 +190,20 @@ void TacObject::SetUpLines()
 	}
 }
 // translates the TacObject
-void TacObject::Move(int deltaX, int deltaY)
+void TacObject::Move(int deltaX, int deltaY, bool moveChildren)
 {
 	this->sprite.move(deltaX, deltaY);
 	this->x += deltaX;
 	this->y += deltaY;
 	this->text.move(deltaX, deltaY);
 	this->SetUpLines();
-	for (int i = 0; i < this->children.size(); i++)
+	if (moveChildren)
 	{
-		this->children[i]->Move(deltaX, deltaY);
+		for (int i = 0; i < this->children.size(); i++)
+		{
+			this->children[i]->Move(deltaX, deltaY);
+		}
 	}
-
 }
 // sets the position of the TacObject
 void TacObject::MoveTo(int newX, int newY)

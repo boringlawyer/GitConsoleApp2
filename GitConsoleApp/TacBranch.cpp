@@ -10,7 +10,8 @@ TacBranch::TacBranch(string nm, TacCommit * ref, float xParam, float yParam) : T
 {
 	sprite = RectangleShape(Vector2f(text.getGlobalBounds().width, text.getGlobalBounds().height));
 	sprite.setFillColor(Color::Yellow);
-	MoveTo(ref->GetCenterOfSprite().x - sprite.getGlobalBounds().width, ref->GetCenterOfSprite().y);
+	MoveTo(ref->GetCenterOfSprite().x - sprite.getGlobalBounds().width - 75, ref->GetCenterOfSprite().y);
+	lines.clear();
 }
 
 

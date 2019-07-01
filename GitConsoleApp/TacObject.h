@@ -32,7 +32,7 @@ protected:
 	//RectangleShape line;
 	vector<RectangleShape> lines;
 	virtual void SetUpLines();
-	virtual void Move(int deltaX, int deltaY);
+	virtual void Move(int deltaX, int deltaY, bool moveChildren = true);
 	virtual void MoveTo(int newX, int newY);
 	static Font font;
 	Text text;

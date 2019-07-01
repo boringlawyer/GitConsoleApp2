@@ -30,7 +30,6 @@ void TacCommit::draw(RenderTarget & target, RenderStates states) const
 bool TacCommit::operator==(TacCommit other)
 {
 	return other.commit == this->commit;
-	return false;
 }
 
 git_commit * TacCommit::GetGitCommit()
